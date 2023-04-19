@@ -9,9 +9,19 @@ import SwiftUI
 
 @main
 struct CallParserDemo2App: App {
+  @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  @StateObject var model = Model()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          ContentView()
+            .environmentObject(model)
         }
     }
+}
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+  func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+    return true
+  }
 }

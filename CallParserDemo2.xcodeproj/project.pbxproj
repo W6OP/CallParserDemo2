@@ -11,6 +11,8 @@
 		99414A8A29EEF58600951AA3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99414A8929EEF58600951AA3 /* ContentView.swift */; };
 		99414A8C29EEF58800951AA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 99414A8B29EEF58800951AA3 /* Assets.xcassets */; };
 		99414A8F29EEF58800951AA3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 99414A8E29EEF58800951AA3 /* Preview Assets.xcassets */; };
+		99414A9929EEF64D00951AA3 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99414A9829EEF64D00951AA3 /* Model.swift */; };
+		99414AA529EF380600951AA3 /* CallParser in Frameworks */ = {isa = PBXBuildFile; productRef = 99414AA429EF380600951AA3 /* CallParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,7 @@
 		99414A8B29EEF58800951AA3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		99414A8E29EEF58800951AA3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		99414A9029EEF58800951AA3 /* CallParserDemo2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CallParserDemo2.entitlements; sourceTree = "<group>"; };
+		99414A9829EEF64D00951AA3 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99414AA529EF380600951AA3 /* CallParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,8 +56,9 @@
 		99414A8629EEF58600951AA3 /* CallParserDemo2 */ = {
 			isa = PBXGroup;
 			children = (
+				99414A9729EEF5E800951AA3 /* Models */,
+				99414A9629EEF5DB00951AA3 /* Views */,
 				99414A8729EEF58600951AA3 /* CallParserDemo2App.swift */,
-				99414A8929EEF58600951AA3 /* ContentView.swift */,
 				99414A8B29EEF58800951AA3 /* Assets.xcassets */,
 				99414A9029EEF58800951AA3 /* CallParserDemo2.entitlements */,
 				99414A8D29EEF58800951AA3 /* Preview Content */,
@@ -67,6 +72,22 @@
 				99414A8E29EEF58800951AA3 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		99414A9629EEF5DB00951AA3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				99414A8929EEF58600951AA3 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		99414A9729EEF5E800951AA3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				99414A9829EEF64D00951AA3 /* Model.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +106,9 @@
 			dependencies = (
 			);
 			name = CallParserDemo2;
+			packageProductDependencies = (
+				99414AA429EF380600951AA3 /* CallParser */,
+			);
 			productName = CallParserDemo2;
 			productReference = 99414A8429EEF58600951AA3 /* CallParserDemo2.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +137,9 @@
 				Base,
 			);
 			mainGroup = 99414A7B29EEF58600951AA3;
+			packageReferences = (
+				99414AA329EF380600951AA3 /* XCRemoteSwiftPackageReference "CallParserForMac" */,
+			);
 			productRefGroup = 99414A8529EEF58600951AA3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -139,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99414A9929EEF64D00951AA3 /* Model.swift in Sources */,
 				99414A8A29EEF58600951AA3 /* ContentView.swift in Sources */,
 				99414A8829EEF58600951AA3 /* CallParserDemo2App.swift in Sources */,
 			);
@@ -336,6 +364,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		99414AA329EF380600951AA3 /* XCRemoteSwiftPackageReference "CallParserForMac" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/W6OP/CallParserForMac.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		99414AA429EF380600951AA3 /* CallParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 99414AA329EF380600951AA3 /* XCRemoteSwiftPackageReference "CallParserForMac" */;
+			productName = CallParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 99414A7C29EEF58600951AA3 /* Project object */;
 }

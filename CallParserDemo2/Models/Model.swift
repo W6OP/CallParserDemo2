@@ -53,7 +53,8 @@ class Model: ObservableObject {
       Task {
         @MainActor in
         let spotId = 34
-        self.publishedHitList = await callLookup.lookupCallPair(spotter: (spotter.call, spotter.sequence, spotId: spotId), dx:  (dx.call, dx.sequence, spotId: spotId))
+        //self.publishedHitList = await callLookup.lookupCallPair(spotter: (spotter.call, spotter.sequence, spotId: spotId), dx:  (dx.call, dx.sequence, spotId: spotId))
+        self.publishedHitList = await callLookup.lookupCallPair(spotter: spotter.call, dx: dx.call)
       }
   }
 

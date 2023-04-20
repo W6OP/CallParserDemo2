@@ -49,15 +49,14 @@ class Model: ObservableObject {
         }
   }
 
-  func lookupCallPair(spotter: (call: String, sequence: Int), dx: (call: String, sequence: Int)) {
-      Task {
-        @MainActor in
-        let spotId = 34
-        //self.publishedHitList = await callLookup.lookupCallPair(spotter: (spotter.call, spotter.sequence, spotId: spotId), dx:  (dx.call, dx.sequence, spotId: spotId))
-        self.publishedHitList = await callLookup.lookupCallPair(spotter: spotter.call, dx: dx.call)
-      }
-  }
-
+//  func lookupCallPair(spotter: (call: String, sequence: Int), dx: (call: String, sequence: Int)) {
+//      Task {
+//        @MainActor in
+//        let spotId = 34
+//        //self.publishedHitList = await callLookup.lookupCallPair(spotter: (spotter.call, spotter.sequence, spotId: spotId), dx:  (dx.call, dx.sequence, spotId: spotId))
+//        self.publishedHitList = await callLookup.lookupCallPair(spotter: spotter.call, dx: dx.call)
+//      }
+//  }
 
   func clearCache() {
     callLookup.clearCache()

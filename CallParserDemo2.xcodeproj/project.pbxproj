@@ -23,6 +23,7 @@
 		99414A8E29EEF58800951AA3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		99414A9029EEF58800951AA3 /* CallParserDemo2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CallParserDemo2.entitlements; sourceTree = "<group>"; };
 		99414A9829EEF64D00951AA3 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		99414AA629F1C91D00951AA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +57,7 @@
 		99414A8629EEF58600951AA3 /* CallParserDemo2 */ = {
 			isa = PBXGroup;
 			children = (
+				99414AA629F1C91D00951AA3 /* Info.plist */,
 				99414A9729EEF5E800951AA3 /* Models */,
 				99414A9629EEF5DB00951AA3 /* Views */,
 				99414A8729EEF58600951AA3 /* CallParserDemo2App.swift */,
@@ -302,6 +304,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CallParserDemo2/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -329,6 +332,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CallParserDemo2/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

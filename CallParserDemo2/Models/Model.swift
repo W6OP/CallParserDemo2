@@ -41,11 +41,17 @@ class Model: ObservableObject {
       Task {
         @MainActor in
           //self.publishedHitList = await callLookup.lookupCall(spotter: spotter, dx: dx)
-        async let spotter = await callLookup.lookupCall(callSign: spotter)
-        async let dxStation = await callLookup.lookupCall(callSign: dx)
-        //await publishedHitList.append(contentsOf: spotter + dxStation)
 
-        await publishedHitList = [spotter[0], dxStation[0]]
+        async let hits = await callLookup.lookupCallPair(
+          spotter: spotter,
+          dx: dx)
+
+        await publishedHitList = hits
+
+        //async let spotter = await callLookup.lookupCall(callSign: spotter)
+        //async let dxStation = await callLookup.lookupCall(callSign: dx)
+
+        //await publishedHitList = [spotter[0], dxStation[0]]
         }
   }
 

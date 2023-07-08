@@ -39,20 +39,21 @@ class Model: ObservableObject {
   ///   - dx: String:
   func lookupCallPair(spotter: String, dx: String) {
       Task {
-        @MainActor in
-          //self.publishedHitList = await callLookup.lookupCall(spotter: spotter, dx: dx)
-
         async let hits = await callLookup.lookupCallPair(
           spotter: spotter,
           dx: dx)
 
-        await publishedHitList = hits
-
-        //async let spotter = await callLookup.lookupCall(callSign: spotter)
-        //async let dxStation = await callLookup.lookupCall(callSign: dx)
-
-        //await publishedHitList = [spotter[0], dxStation[0]]
+        // call a func since can't capture async let result
+        await updatePublishedHitList(hits: hits)
+          //await publishedHitList = hits
         }
+  }
+
+
+  /// By calling this function we can update using the result of an async let.
+  /// - Parameter hits: [Hit]
+  @MainActor func updatePublishedHitList(hits: [Hit]) {
+     publishedHitList = hits
   }
 
 //  func lookupCallPair(spotter: (call: String, sequence: Int), dx: (call: String, sequence: Int)) {

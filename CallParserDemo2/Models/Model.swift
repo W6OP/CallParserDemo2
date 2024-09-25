@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import CallParser
+@preconcurrency import CallParser
 
-class Model: ObservableObject {
+@MainActor class Model: ObservableObject {
 
   @Published var publishedHitList = [Hit]()
 
@@ -28,7 +28,7 @@ class Model: ObservableObject {
   /// - Parameter call: String:
   func lookupSingleCall(call: String)  {
     Task {
-      @MainActor in
+      [callLookup] in
       publishedHitList = await callLookup.lookupCall(callSign: call)
     }
   }
@@ -39,13 +39,13 @@ class Model: ObservableObject {
   ///   - dx: String:
   func lookupCallPair(spotter: String, dx: String) {
       Task {
-        async let hits = await callLookup.lookupCallPair(
+        [callLookup] in
+        let hits = await callLookup.lookupCallPair(
           spotter: spotter,
           dx: dx)
 
         // call a func since can't capture async let result
-        await updatePublishedHitList(hits: hits)
-          //await publishedHitList = hits
+         updatePublishedHitList(hits: hits)
         }
   }
 
@@ -72,9 +72,11 @@ class Model: ObservableObject {
 
   // --------------------------------------------------------------------------
 
-  func logonToQRZ(userId: String, password: String) {
+  func logonToQRZ(userId: String, password: String) async {
 
     Task {
+      // This ensures that model is captured in an immutable way, preventing concurrent mutations
+      [callLookup] in
       do {
         let _ = try await callLookup.logonToQrz(userId: userId, password: password)
       } catch {

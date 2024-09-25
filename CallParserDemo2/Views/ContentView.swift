@@ -23,7 +23,9 @@ struct ContentView: View {
         TextField("Password", text: $password)
           .frame(maxWidth: 225)
         Button(action: {
-          model.logonToQRZ(userId: userId, password: password)
+          Task { // - Updated for V6
+            await model.logonToQRZ(userId: userId, password: password)
+          }
         }) {
           Text("Logon")
         }

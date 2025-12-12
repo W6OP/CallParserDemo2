@@ -66,7 +66,9 @@ import Foundation
 //  }
 
   func clearCache() {
-    callLookup.clearCache()
+    Task {
+      await callLookup.clearCache()
+    }
     publishedHitList.removeAll()
   }
 

@@ -19,6 +19,7 @@ import Foundation
   init() {
     // initialize the Call Parser
     callLookup = CallLookup(prefixFileParser: callParser)
+    callLookup.verboseLogging = true
   }
 
   // MARK: NEW STUFF --------------------------------------------------------------------------

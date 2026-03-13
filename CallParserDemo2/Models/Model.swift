@@ -41,12 +41,12 @@ import Foundation
   func lookupCallPair(spotter: String, dx: String) {
       Task {
         [callLookup] in
-        let hits = await callLookup.lookupCallPair(
+        let hitPair = await callLookup.lookupCallPairGrouped(
           spotter: spotter,
           dx: dx)
 
         // call a func since can't capture async let result
-         updatePublishedHitList(hits: hits)
+         updatePublishedHitList(hits: hitPair.spotter + hitPair.dx)
         }
   }
 
@@ -57,18 +57,10 @@ import Foundation
      publishedHitList = hits
   }
 
-//  func lookupCallPair(spotter: (call: String, sequence: Int), dx: (call: String, sequence: Int)) {
-//      Task {
-//        @MainActor in
-//        let spotId = 34
-//        //self.publishedHitList = await callLookup.lookupCallPair(spotter: (spotter.call, spotter.sequence, spotId: spotId), dx:  (dx.call, dx.sequence, spotId: spotId))
-//        self.publishedHitList = await callLookup.lookupCallPair(spotter: spotter.call, dx: dx.call)
-//      }
-//  }
-
   func clearCache() {
     Task {
-      await callLookup.clearCache()
+      [callLookup] in
+      await callLookup.clearLookupCache()
     }
     publishedHitList.removeAll()
   }

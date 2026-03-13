@@ -48,7 +48,6 @@ struct ContentView: View {
         Spacer()
       }
       HStack {
-        //Button(action: { model.lookupCallPair(spotter: ("W6OP", 4), dx: ("C5C", 5))
         Button(action: { model.lookupCallPair(spotter: ("W6OP"), dx: ("C5C"))
         }) {
           Text("Lookup Pair xCluster")

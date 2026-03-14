@@ -15,6 +15,7 @@ struct ContentView: View {
   @AppStorage("password") var password: String = ""
   @State var prefixDataList = [Hit]()
 
+
   var body: some View {
     VStack{
       HStack{
@@ -43,14 +44,22 @@ struct ContentView: View {
       HStack {
         Button(action: { model.lookupCallPair(spotter: "TX4YKP", dx: "OA5TY")
         }) {
-          Text("Lookup Pair Async Let")
+          Text("Lookup Pair #1")
         }
         Spacer()
       }
       HStack {
         Button(action: { model.lookupCallPair(spotter: ("W6OP"), dx: ("C5C"))
         }) {
-          Text("Lookup Pair xCluster")
+          Text("Lookup Pair #2")
+        }
+        Spacer()
+      }
+      HStack {
+        Button(action: {
+          model.downloadBigCTY()
+        }) {
+          Text("Download cty.dat")
         }
         Spacer()
       }

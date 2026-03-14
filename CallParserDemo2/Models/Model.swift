@@ -57,6 +57,19 @@ import Foundation
      publishedHitList = hits
   }
 
+  func downloadBigCTY() {
+    Task {
+      [callLookup] in
+      do {
+        let data = try await callLookup.downloadAndParseBigCTY()
+        callLookup.bigCTYData = data
+        print("BigCTY downloaded: \(data.entities.count) entities, \(data.exactMatches.count) exact matches")
+      } catch {
+        print("BigCTY download failed: \(error)")
+      }
+    }
+  }
+
   func clearCache() {
     Task {
       [callLookup] in

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@preconcurrency import CallParser
+import CallParser
 
 @MainActor class Model: ObservableObject {
 
@@ -67,6 +67,16 @@ import Foundation
       } catch {
         print("BigCTY download failed: \(error)")
       }
+    }
+  }
+
+  /// Look up all call signs in the sample list concurrently via TaskGroup.
+  func lookupBatch() {
+    Task {
+      [callLookup] in
+      let results = await callLookup.lookupBatch(callSigns: callSigns)
+      // Flatten all results into a single list for display
+      updatePublishedHitList(hits: results.values.flatMap { $0 })
     }
   }
 

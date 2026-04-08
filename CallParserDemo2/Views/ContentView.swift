@@ -154,6 +154,11 @@ struct ContentView: View {
             }
             .buttonStyle(.glass)
 
+            Button("Batch Lookup (all samples)") {
+                model.lookupBatch()
+            }
+            .buttonStyle(.glass)
+
             Divider()
                 .overlay(.white.opacity(0.15))
 

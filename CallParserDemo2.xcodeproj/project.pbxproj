@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9918557A2F88011C0082D797 /* compound.csv in Resources */ = {isa = PBXBuildFile; fileRef = 991855782F87FBF10082D797 /* compound.csv */; };
+		9918557B2F8801350082D797 /* pskreporter.csv in Resources */ = {isa = PBXBuildFile; fileRef = 991855792F87FBF10082D797 /* pskreporter.csv */; };
 		99414A8829EEF58600951AA3 /* CallParserDemo2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99414A8729EEF58600951AA3 /* CallParserDemo2App.swift */; };
 		99414A8A29EEF58600951AA3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99414A8929EEF58600951AA3 /* ContentView.swift */; };
 		99414A8C29EEF58800951AA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 99414A8B29EEF58800951AA3 /* Assets.xcassets */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		991855782F87FBF10082D797 /* compound.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = compound.csv; sourceTree = "<group>"; };
+		991855792F87FBF10082D797 /* pskreporter.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = pskreporter.csv; sourceTree = "<group>"; };
 		99414A8429EEF58600951AA3 /* CallParserDemo2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CallParserDemo2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99414A8729EEF58600951AA3 /* CallParserDemo2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallParserDemo2App.swift; sourceTree = "<group>"; };
 		99414A8929EEF58600951AA3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -38,6 +42,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		991855772F87FBEB0082D797 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				991855782F87FBF10082D797 /* compound.csv */,
+				991855792F87FBF10082D797 /* pskreporter.csv */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		99414A7B29EEF58600951AA3 = {
 			isa = PBXGroup;
 			children = (
@@ -64,6 +77,7 @@
 				99414A8B29EEF58800951AA3 /* Assets.xcassets */,
 				99414A9029EEF58800951AA3 /* CallParserDemo2.entitlements */,
 				99414A8D29EEF58800951AA3 /* Preview Content */,
+				991855772F87FBEB0082D797 /* Resources */,
 			);
 			path = CallParserDemo2;
 			sourceTree = "<group>";
@@ -156,7 +170,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9918557A2F88011C0082D797 /* compound.csv in Resources */,
 				99414A8F29EEF58800951AA3 /* Preview Assets.xcassets in Resources */,
+				9918557B2F8801350082D797 /* pskreporter.csv in Resources */,
 				99414A8C29EEF58800951AA3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,7 +322,7 @@
 				CODE_SIGN_ENTITLEMENTS = CallParserDemo2/CallParserDemo2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CallParserDemo2/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -345,7 +361,7 @@
 				CODE_SIGN_ENTITLEMENTS = CallParserDemo2/CallParserDemo2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CallParserDemo2/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;

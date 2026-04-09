@@ -90,7 +90,7 @@ import CallParser
     let lookup = callLookup
     let dataSet = selectedDataSet
     Task {
-      let callSigns = CallLookup.loadCallSigns(from: dataSet)
+      let callSigns = CallLookup.loadCallSigns(from: dataSet, in: .main)
       guard !callSigns.isEmpty else {
         await MainActor.run {
           self.benchmarkResult = "\(dataSet.label) not found"

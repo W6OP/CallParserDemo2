@@ -166,10 +166,18 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
 
-            Button("Run Benchmark") {
-                model.runBenchmark()
+            HStack {
+                Button("Run Benchmark") {
+                    model.runBenchmark()
+                }
+                .buttonStyle(.glass)
+                .disabled(model.benchmarkRunning)
+
+                if model.benchmarkRunning {
+                    ProgressView()
+                        .controlSize(.small)
+                }
             }
-            .buttonStyle(.glass)
 
             if let result = model.benchmarkResult {
                 Text(result)

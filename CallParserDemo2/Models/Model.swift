@@ -12,6 +12,7 @@ import CallParser
 
   @Published var publishedHitList = [Hit]()
   @Published var benchmarkResult: String?
+  @Published var benchmarkRunning = false
   @Published var selectedDataSet: BenchmarkDataSet = .compound
 
   // Call Parser
@@ -21,7 +22,7 @@ import CallParser
   init() {
     // initialize the Call Parser
     callLookup = CallLookup(prefixFileParser: callParser)
-    callLookup.verboseLogging = true
+    callLookup.verboseLogging = false
   }
 
   // MARK: NEW STUFF --------------------------------------------------------------------------
@@ -84,22 +85,22 @@ import CallParser
 
   /// Benchmarks a batch lookup using the selected data set (parser only, no QRZ).
   func runBenchmark() {
-    benchmarkResult = "Loading \(selectedDataSet.label)…"
+    benchmarkResult = nil
+    benchmarkRunning = true
     let lookup = callLookup
     let dataSet = selectedDataSet
     Task {
       let callSigns = CallLookup.loadCallSigns(from: dataSet)
       guard !callSigns.isEmpty else {
-        await MainActor.run { self.benchmarkResult = "\(dataSet.label) not found" }
+        await MainActor.run {
+          self.benchmarkResult = "\(dataSet.label) not found"
+          self.benchmarkRunning = false
+        }
         return
       }
 
-      // Ensure QRZ is bypassed for a pure parser benchmark
-      lookup.useCallParserOnly = true
-      await lookup.clearLookupCache()
-
       let start = ContinuousClock.now
-      let results = await lookup.lookupBatch(callSigns: callSigns)
+      let results = await lookup.parseBatch(callSigns: callSigns)
       let elapsed = ContinuousClock.now - start
 
       let processed = results.values.filter { !$0.isEmpty }.count
@@ -107,6 +108,7 @@ import CallParser
         + Int64(elapsed.components.attoseconds / 1_000_000_000_000_000)
       await MainActor.run {
         self.benchmarkResult = "\(processed) of \(callSigns.count) resolved in \(ms) ms"
+        self.benchmarkRunning = false
       }
     }
   }

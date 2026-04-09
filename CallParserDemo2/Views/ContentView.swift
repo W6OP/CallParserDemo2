@@ -13,6 +13,7 @@ struct ContentView: View {
     @Namespace private var glassNamespace
 
     @State private var callSign = ""
+    @State private var selectedDataSet: BenchmarkDataSet = .compound
     @AppStorage("username") private var userId: String = ""
     @AppStorage("password") private var password: String = ""
 
@@ -159,7 +160,7 @@ struct ContentView: View {
             }
             .buttonStyle(.glass)
 
-            Picker("Data set", selection: $model.selectedDataSet) {
+            Picker("Data set", selection: $selectedDataSet) {
                 ForEach(BenchmarkDataSet.allCases, id: \.self) { dataSet in
                     Text(dataSet.label).tag(dataSet)
                 }
@@ -197,6 +198,20 @@ struct ContentView: View {
                 model.clearCache()
             }
             .buttonStyle(.glass(.regular.tint(.red.opacity(0.22))))
+        }
+        .onAppear {
+            selectedDataSet = model.selectedDataSet
+        }
+        .onChange(of: selectedDataSet) {
+            let newValue = selectedDataSet
+            DispatchQueue.main.async {
+                model.selectedDataSet = newValue
+            }
+        }
+        .onChange(of: model.selectedDataSet) {
+            if selectedDataSet != model.selectedDataSet {
+                selectedDataSet = model.selectedDataSet
+            }
         }
     }
 
@@ -453,6 +468,6 @@ private extension View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(Model())
+        .environmentObject(Model(loggingLevel: false))
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct CallParserDemo2App: App {
   @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-  @StateObject var model = Model()
+  @StateObject var model = Model(loggingLevel: true)
 
     var body: some Scene {
         WindowGroup {

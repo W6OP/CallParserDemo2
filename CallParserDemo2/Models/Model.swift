@@ -19,10 +19,10 @@ import CallParser
   let callParser = PrefixFileParser()
   var callLookup: CallLookup
 
-  init() {
+  init(loggingLevel: Bool) {
     // initialize the Call Parser
     callLookup = CallLookup(prefixFileParser: callParser)
-    callLookup.verboseLogging = false
+    callLookup.verboseLogging = loggingLevel
   }
 
   // MARK: NEW STUFF --------------------------------------------------------------------------

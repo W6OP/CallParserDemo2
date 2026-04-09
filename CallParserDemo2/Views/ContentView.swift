@@ -159,6 +159,24 @@ struct ContentView: View {
             }
             .buttonStyle(.glass)
 
+            Picker("Data set", selection: $model.selectedDataSet) {
+                ForEach(BenchmarkDataSet.allCases, id: \.self) { dataSet in
+                    Text(dataSet.label).tag(dataSet)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Button("Run Benchmark") {
+                model.runBenchmark()
+            }
+            .buttonStyle(.glass)
+
+            if let result = model.benchmarkResult {
+                Text(result)
+                    .font(.caption.weight(.semibold).monospaced())
+                    .foregroundStyle(Color.mediumBlueText)
+            }
+
             Divider()
                 .overlay(.white.opacity(0.15))
 

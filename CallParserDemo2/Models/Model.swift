@@ -16,13 +16,13 @@ import CallParser
   @Published var selectedDataSet: BenchmarkDataSet = .compound
 
   // Call Parser
-  let callParser = PrefixFileParser()
-  var callLookup: CallLookup
+  let callLookup: CallLookup
 
   init(loggingLevel: Bool) {
-    // initialize the Call Parser
-    callLookup = CallLookup(prefixFileParser: callParser)
-    callLookup.verboseLogging = loggingLevel
+    callLookup = CallLookup(
+      parsedData: PrefixFileParser.parse(),
+      verboseLogging: loggingLevel
+    )
   }
 
   // MARK: NEW STUFF --------------------------------------------------------------------------

@@ -104,8 +104,8 @@ struct ContentView: View {
             TextField("QRZ username", text: $userId)
                 .textFieldStyle(.plain)
                 .glassInput()
-                .onChange(of: userId) {
-                    userId = normalizedUppercase(userId, maxLength: 10)
+                .onChange(of: userId) { _, newValue in
+                    userId = normalizedUppercase(newValue, maxLength: 10)
                 }
 
             SecureField("Password", text: $password)
@@ -145,8 +145,8 @@ struct ContentView: View {
             TextField("Enter call sign", text: $callSign)
                 .textFieldStyle(.plain)
                 .glassInput()
-                .onChange(of: callSign) {
-                    callSign = normalizedUppercase(callSign, maxLength: 10)
+                .onChange(of: callSign) { _, newValue in
+                    callSign = normalizedUppercase(newValue, maxLength: 10)
                 }
                 .onSubmit(performSingleLookup)
 
@@ -187,7 +187,7 @@ struct ContentView: View {
 
             HStack {
                 Button("Run Benchmark") {
-                    model.runBenchmark()
+                    model.runBenchmark(dataSet: selectedDataSet)
                 }
                 .buttonStyle(.glass)
                 .disabled(model.benchmarkRunning)
@@ -198,11 +198,12 @@ struct ContentView: View {
                 }
             }
 
-            if let result = model.benchmarkResult {
-                Text(result)
-                    .font(.caption.weight(.semibold).monospaced())
-                    .foregroundStyle(Color.mediumBlueText)
-            }
+            BenchmarkResultsView(
+                latestResults: model.latestBenchmarkResults,
+                previousResults: model.previousBenchmarkResults,
+                bestResults: model.bestBenchmarkResults,
+                status: model.benchmarkStatus
+            )
 
             Divider()
                 .overlay(.white.opacity(0.15))
@@ -217,20 +218,6 @@ struct ContentView: View {
             }
             .buttonStyle(.glass(.regular.tint(.red.opacity(0.22))))
         }
-        .onAppear {
-            selectedDataSet = model.selectedDataSet
-        }
-        .onChange(of: selectedDataSet) {
-            let newValue = selectedDataSet
-            DispatchQueue.main.async {
-                model.selectedDataSet = newValue
-            }
-        }
-        .onChange(of: model.selectedDataSet) {
-            if selectedDataSet != model.selectedDataSet {
-                selectedDataSet = model.selectedDataSet
-            }
-        }
     }
 
     private var resultsPanel: some View {
@@ -244,7 +231,7 @@ struct ContentView: View {
                 ScrollView {
                     GlassEffectContainer(spacing: 18) {
                         LazyVStack(spacing: 18) {
-                            ForEach(Array(model.publishedHitList.enumerated()), id: \.element.id) { index, hit in
+                            ForEach(model.publishedHitList.enumerated(), id: \.element.id) { index, hit in
                                 HitCard(hit: hit)
                                     .glassPanel(
                                         tint: index.isMultiple(of: 2) ? .white.opacity(0.08) : .cyan.opacity(0.10),
@@ -495,7 +482,7 @@ private struct MetadataChip: View {
     }
 }
 
-private extension Color {
+extension Color {
     static let mediumBlueText = Color(red: 0.18, green: 0.38, blue: 0.72)
 }
 

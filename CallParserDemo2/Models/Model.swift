@@ -19,19 +19,24 @@ enum QRZLogonStatus: Equatable, Sendable {
 @MainActor class Model: ObservableObject {
 
   @Published var publishedHitList = [Hit]()
-  @Published var benchmarkResult: String?
+  @Published var latestBenchmarkResults = [BenchmarkDataSet: BenchmarkResult]()
+  @Published var previousBenchmarkResults = [BenchmarkDataSet: BenchmarkResult]()
+  @Published var bestBenchmarkResults = [BenchmarkDataSet: BenchmarkResult]()
+  @Published var benchmarkStatus: String?
   @Published var benchmarkRunning = false
-  @Published var selectedDataSet: BenchmarkDataSet = .compound
   @Published var qrzLogonStatus: QRZLogonStatus = .idle
 
   // Call Parser
   let callLookup: CallLookup
+
+  private static let benchmarkResultsStorageKey = "benchmarkResults.best"
 
   init(loggingLevel: Bool) {
     callLookup = CallLookup(
       parsedData: PrefixFileParser.parse(),
       verboseLogging: loggingLevel
     )
+    bestBenchmarkResults = Self.loadBestBenchmarkResults()
   }
 
   // MARK: NEW STUFF --------------------------------------------------------------------------
@@ -92,17 +97,19 @@ enum QRZLogonStatus: Equatable, Sendable {
     }
   }
 
-  /// Benchmarks a batch lookup using the selected data set (parser only, no QRZ).
-  func runBenchmark() {
-    benchmarkResult = nil
+  /// Benchmarks a data set and persists it when it beats the stored result.
+  func runBenchmark(dataSet: BenchmarkDataSet) {
+    previousBenchmarkResults[dataSet] = bestBenchmarkResults[dataSet]
+    latestBenchmarkResults.removeValue(forKey: dataSet)
+    benchmarkStatus = nil
     benchmarkRunning = true
     let lookup = callLookup
-    let dataSet = selectedDataSet
+
     Task {
       let callSigns = CallLookup.loadCallSigns(from: dataSet, in: .main)
       guard !callSigns.isEmpty else {
         await MainActor.run {
-          self.benchmarkResult = "\(dataSet.label) not found"
+          self.benchmarkStatus = "\(dataSet.label) not found"
           self.benchmarkRunning = false
         }
         return
@@ -113,10 +120,18 @@ enum QRZLogonStatus: Equatable, Sendable {
       let elapsed = ContinuousClock.now - start
 
       let processed = results.values.filter { !$0.isEmpty }.count
-      let ms = elapsed.components.seconds * 1000
+      let milliseconds = elapsed.components.seconds * 1000
         + Int64(elapsed.components.attoseconds / 1_000_000_000_000_000)
+      let benchmarkResult = BenchmarkResult(
+        dataSet: dataSet,
+        resolvedCount: processed,
+        totalCount: callSigns.count,
+        milliseconds: milliseconds
+      )
+
       await MainActor.run {
-        self.benchmarkResult = "\(processed) of \(callSigns.count) resolved in \(ms) ms"
+        self.latestBenchmarkResults[dataSet] = benchmarkResult
+        self.storeBestBenchmarkResult(benchmarkResult)
         self.benchmarkRunning = false
       }
     }
@@ -128,6 +143,41 @@ enum QRZLogonStatus: Equatable, Sendable {
       await callLookup.clearLookupCache()
     }
     publishedHitList.removeAll()
+  }
+
+  private func storeBestBenchmarkResult(_ result: BenchmarkResult) {
+    guard let dataSet = result.dataSet else { return }
+    if let existingResult = bestBenchmarkResults[dataSet], !result.isFaster(than: existingResult) {
+      return
+    }
+
+    bestBenchmarkResults[dataSet] = result
+    persistBestBenchmarkResults()
+  }
+
+  private func persistBestBenchmarkResults() {
+    do {
+      let data = try JSONEncoder().encode(Array(bestBenchmarkResults.values))
+      UserDefaults.standard.set(data, forKey: Self.benchmarkResultsStorageKey)
+    } catch {
+      benchmarkStatus = "Could not save benchmark results"
+    }
+  }
+
+  private static func loadBestBenchmarkResults() -> [BenchmarkDataSet: BenchmarkResult] {
+    guard let data = UserDefaults.standard.data(forKey: benchmarkResultsStorageKey) else {
+      return [:]
+    }
+
+    do {
+      let results = try JSONDecoder().decode([BenchmarkResult].self, from: data)
+      return results.reduce(into: [BenchmarkDataSet: BenchmarkResult]()) { partialResult, result in
+        guard let dataSet = result.dataSet else { return }
+        partialResult[dataSet] = result
+      }
+    } catch {
+      return [:]
+    }
   }
 
   // --------------------------------------------------------------------------

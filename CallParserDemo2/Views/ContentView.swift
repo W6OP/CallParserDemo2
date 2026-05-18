@@ -112,12 +112,30 @@ struct ContentView: View {
                 .textFieldStyle(.plain)
                 .glassInput()
 
-            Button("Log On") {
-                performLogon()
+            HStack(spacing: 12) {
+                Button("Log On") {
+                    performLogon()
+                }
+                .buttonStyle(.glassProminent)
+                .controlSize(.large)
+                .disabled(model.qrzLogonStatus == .inProgress || isLoggedOn)
+
+                if isLoggedOn {
+                    Button("Log Off") {
+                        performLogoff()
+                    }
+                    .buttonStyle(.glass)
+                    .controlSize(.large)
+                }
             }
-            .buttonStyle(.glassProminent)
-            .controlSize(.large)
+
+            QRZLogonStatusView(status: model.qrzLogonStatus)
         }
+    }
+
+    private var isLoggedOn: Bool {
+        if case .success = model.qrzLogonStatus { return true }
+        return false
     }
 
     private var lookupSection: some View {
@@ -308,11 +326,44 @@ struct ContentView: View {
         }
     }
 
+    private func performLogoff() {
+        Task {
+            await model.logoffFromQRZ()
+        }
+    }
+
     private func performSingleLookup() {
         let trimmedCall = callSign.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedCall.isEmpty else { return }
         callSign = trimmedCall.uppercased()
         model.lookupSingleCall(call: trimmedCall)
+    }
+}
+
+private struct QRZLogonStatusView: View {
+    let status: QRZLogonStatus
+
+    var body: some View {
+        switch status {
+        case .idle:
+            EmptyView()
+        case .inProgress:
+            HStack(spacing: 8) {
+                ProgressView()
+                    .controlSize(.small)
+                Text("Contacting QRZ…")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.mediumBlueText)
+            }
+        case .success(let message):
+            Label(message, systemImage: "checkmark.seal.fill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.green)
+        case .failure(let message):
+            Label(message, systemImage: "exclamationmark.triangle.fill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.red)
+        }
     }
 }
 

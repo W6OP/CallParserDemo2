@@ -8,12 +8,21 @@
 import Foundation
 import CallParser
 
+/// User-visible status for a QRZ.com logon attempt.
+enum QRZLogonStatus: Equatable, Sendable {
+  case idle
+  case inProgress
+  case success(String)
+  case failure(String)
+}
+
 @MainActor class Model: ObservableObject {
 
   @Published var publishedHitList = [Hit]()
   @Published var benchmarkResult: String?
   @Published var benchmarkRunning = false
   @Published var selectedDataSet: BenchmarkDataSet = .compound
+  @Published var qrzLogonStatus: QRZLogonStatus = .idle
 
   // Call Parser
   let callLookup: CallLookup
@@ -124,22 +133,40 @@ import CallParser
   // --------------------------------------------------------------------------
 
   func logonToQRZ(userId: String, password: String) async {
-
-    Task {
-      // This ensures that model is captured in an immutable way, preventing concurrent mutations
-      [callLookup] in
-      do {
-        let _ = try await callLookup.logonToQrz(userId: userId, password: password)
-      } catch {
-        print("logon error: \(error)")
-      }
+    qrzLogonStatus = .inProgress
+    do {
+      let succeeded = try await callLookup.logonToQrz(
+        userId: userId,
+        password: password
+      )
+      qrzLogonStatus = succeeded
+        ? .success("Logged on as \(userId)")
+        : .failure("QRZ refused the connection — try again in a minute")
+    } catch {
+      qrzLogonStatus = .failure(Self.userFacingMessage(for: error))
     }
-    /*
-     2023-01-21 08:11:16.613897-0800 CallParser Demo[5871:451190] [QRZManager] Request Session Key.
-     session key request failed: ["Remark": "cpu: 0.060s", "Error": "Username/password incorrect ", "GMTime": "Sat Jan 21 16:11:17 2023"]
-     getSessionKey failed: The operation couldn’t be completed. (CallParser.QRZManagerError error 2.)
-     logon error: The operation couldn’t be completed. (CallParser.QRZManagerError error 2.)
-     */
+  }
+
+  /// Clears the local QRZ session and resets the status indicator.
+  func logoffFromQRZ() async {
+    await callLookup.logoffFromQrz()
+    qrzLogonStatus = .idle
+  }
+
+  /// Maps a logon error into a short, user-facing string.
+  private static func userFacingMessage(for error: Error) -> String {
+    guard let qrzError = error as? QRZManagerError else {
+      return error.localizedDescription
+    }
+    switch qrzError {
+    case .invalidCredentials:    return "Username or password incorrect"
+    case .requestTooFrequent:    return "Too many requests — wait 60 seconds and retry"
+    case .lockout:               return "QRZ is refusing connections from this client"
+    case .sessionTimeout:        return "Session timed out"
+    case .notFound:              return "QRZ user not found"
+    case .sessionKeyAvailable:   return "Already logged on"
+    case .unknown:               return "Logon failed (unknown error)"
+    }
   }
 
   private let callSigns = [

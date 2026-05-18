@@ -16,12 +16,31 @@ struct CallParserDemo2App: App {
         WindowGroup {
           ContentView()
             .environmentObject(model)
+            .task {
+              // Hand the AppDelegate a shutdown hook so it can cleanly log off
+              // before the process exits.
+              appDelegate.shutdownAction = { @MainActor [model] in
+                await model.logoffFromQRZ()
+              }
+            }
         }
     }
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate {
+  /// Closure invoked from `applicationShouldTerminate(_:)` before the process exits.
+  var shutdownAction: (@MainActor @Sendable () async -> Void)?
+
   func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     return true
+  }
+
+  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+    guard let action = shutdownAction else { return .terminateNow }
+    Task { @MainActor in
+      await action()
+      NSApp.reply(toApplicationShouldTerminate: true)
+    }
+    return .terminateLater
   }
 }

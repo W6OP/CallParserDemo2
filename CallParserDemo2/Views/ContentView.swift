@@ -14,6 +14,7 @@ struct ContentView: View {
 
     @State private var callSign = ""
     @State private var selectedDataSet: BenchmarkDataSet = .compound
+    @State private var selectedMethod: BenchmarkMethod = .legacy
     @AppStorage("username") private var userId: String = ""
     @AppStorage("password") private var password: String = ""
 
@@ -64,37 +65,38 @@ struct ContentView: View {
     }
 
     private var controlPanel: some View {
-        VStack(alignment: .leading, spacing: 22) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Call Parser")
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 22) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Call Parser")
+                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
 
-                Text("Parser controls, QRZ access, and quick call-sign exercises in a single Tahoe-style workspace.")
-                    .font(.headline)
-                    .foregroundStyle(.white.opacity(0.8))
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.horizontal, 6)
+                    Text("Parser controls, QRZ access, and quick call-sign exercises in a single Tahoe-style workspace.")
+                        .font(.headline)
+                        .foregroundStyle(.white.opacity(0.8))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal, 6)
 
-            GlassEffectContainer(spacing: 18) {
-                VStack(alignment: .leading, spacing: 18) {
-                    authSection
-                        .glassPanel(tint: .white.opacity(0.10), cornerRadius: 30)
-                        .glassEffectID("auth", in: glassNamespace)
+                GlassEffectContainer(spacing: 18) {
+                    VStack(alignment: .leading, spacing: 18) {
+                        authSection
+                            .glassPanel(tint: .white.opacity(0.10), cornerRadius: 30)
+                            .glassEffectID("auth", in: glassNamespace)
 
-                    lookupSection
-                        .glassPanel(tint: .cyan.opacity(0.12), cornerRadius: 30)
-                        .glassEffectID("lookup", in: glassNamespace)
+                        lookupSection
+                            .glassPanel(tint: .cyan.opacity(0.12), cornerRadius: 30)
+                            .glassEffectID("lookup", in: glassNamespace)
 
-                    actionsSection
-                        .glassPanel(tint: .blue.opacity(0.12), cornerRadius: 30)
-                        .glassEffectID("actions", in: glassNamespace)
+                        actionsSection
+                            .glassPanel(tint: .blue.opacity(0.12), cornerRadius: 30)
+                            .glassEffectID("actions", in: glassNamespace)
+                    }
                 }
             }
-
-            Spacer(minLength: 0)
         }
+        .scrollIndicators(.hidden)
     }
 
     private var authSection: some View {
@@ -163,6 +165,11 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 14) {
             sectionHeader(title: "Quick Actions", subtitle: "Exercise pair parsing and maintenance commands without leaving the screen.")
 
+            Toggle("Use bitset lookup", isOn: $model.useBitsetLookup)
+                .toggleStyle(.switch)
+                .foregroundStyle(Color.mediumBlueText)
+                .tint(.cyan)
+
             Button("Lookup Pair: TX4YKP / OA5TY") {
                 model.lookupCallPair(spotter: "TX4YKP", dx: "OA5TY")
             }
@@ -178,6 +185,24 @@ struct ContentView: View {
             }
             .buttonStyle(.glass)
 
+            HStack {
+                Button("Compare Batch (legacy vs bitset)") {
+                    model.runComparison()
+                }
+                .buttonStyle(.glass)
+                .disabled(model.comparisonRunning)
+
+                if model.comparisonRunning {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+            }
+
+            LookupComparisonView(
+                comparisons: model.lookupComparisons,
+                summary: model.comparisonSummary
+            )
+
             Picker("Data set", selection: $selectedDataSet) {
                 ForEach(BenchmarkDataSet.allCases, id: \.self) { dataSet in
                     Text(dataSet.label).tag(dataSet)
@@ -185,9 +210,16 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
 
+            Picker("Method", selection: $selectedMethod) {
+                ForEach(BenchmarkMethod.allCases, id: \.self) { method in
+                    Text(method.label).tag(method)
+                }
+            }
+            .pickerStyle(.segmented)
+
             HStack {
                 Button("Run Benchmark") {
-                    model.runBenchmark(dataSet: selectedDataSet)
+                    model.runBenchmark(dataSet: selectedDataSet, method: selectedMethod)
                 }
                 .buttonStyle(.glass)
                 .disabled(model.benchmarkRunning)
@@ -208,6 +240,47 @@ struct ContentView: View {
             Divider()
                 .overlay(.white.opacity(0.15))
 
+            HStack {
+                Button("Run Core Benchmark") {
+                    model.runCoreBenchmark(dataSet: selectedDataSet)
+                }
+                .buttonStyle(.glass)
+                .disabled(model.benchmarkRunning)
+
+                if model.benchmarkRunning {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+            }
+
+            CoreBenchmarkResultsView(
+                results: model.latestCoreBenchmark
+            )
+
+            Divider()
+                .overlay(.white.opacity(0.15))
+
+            HStack {
+                Button("Run Exception Report") {
+                    model.runExceptionReport(dataSet: selectedDataSet)
+                }
+                .buttonStyle(.glass)
+                .disabled(model.exceptionReportRunning)
+
+                if model.exceptionReportRunning {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+            }
+
+            ExceptionReportView(
+                report: model.exceptionReport,
+                status: model.exceptionReportStatus
+            )
+
+            Divider()
+                .overlay(.white.opacity(0.15))
+
             Button("Download cty.dat") {
                 model.downloadBigCTY()
             }
@@ -215,6 +288,11 @@ struct ContentView: View {
 
             Button("Clear Results Cache") {
                 model.clearCache()
+            }
+            .buttonStyle(.glass(.regular.tint(.red.opacity(0.22))))
+
+            Button("Reset Benchmark Results") {
+                model.resetBenchmarkResults()
             }
             .buttonStyle(.glass(.regular.tint(.red.opacity(0.22))))
         }

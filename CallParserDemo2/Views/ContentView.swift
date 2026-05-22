@@ -14,7 +14,6 @@ struct ContentView: View {
 
     @State private var callSign = ""
     @State private var selectedDataSet: BenchmarkDataSet = .compound
-    @State private var selectedMethod: BenchmarkMethod = .legacy
     @AppStorage("username") private var userId: String = ""
     @AppStorage("password") private var password: String = ""
 
@@ -165,11 +164,6 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 14) {
             sectionHeader(title: "Quick Actions", subtitle: "Exercise pair parsing and maintenance commands without leaving the screen.")
 
-            Toggle("Use bitset lookup", isOn: $model.useBitsetLookup)
-                .toggleStyle(.switch)
-                .foregroundStyle(Color.mediumBlueText)
-                .tint(.cyan)
-
             Button("Lookup Pair: TX4YKP / OA5TY") {
                 model.lookupCallPair(spotter: "TX4YKP", dx: "OA5TY")
             }
@@ -185,24 +179,6 @@ struct ContentView: View {
             }
             .buttonStyle(.glass)
 
-            HStack {
-                Button("Compare Batch (legacy vs bitset)") {
-                    model.runComparison()
-                }
-                .buttonStyle(.glass)
-                .disabled(model.comparisonRunning)
-
-                if model.comparisonRunning {
-                    ProgressView()
-                        .controlSize(.small)
-                }
-            }
-
-            LookupComparisonView(
-                comparisons: model.lookupComparisons,
-                summary: model.comparisonSummary
-            )
-
             Picker("Data set", selection: $selectedDataSet) {
                 ForEach(BenchmarkDataSet.allCases, id: \.self) { dataSet in
                     Text(dataSet.label).tag(dataSet)
@@ -210,16 +186,9 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
 
-            Picker("Method", selection: $selectedMethod) {
-                ForEach(BenchmarkMethod.allCases, id: \.self) { method in
-                    Text(method.label).tag(method)
-                }
-            }
-            .pickerStyle(.segmented)
-
             HStack {
                 Button("Run Benchmark") {
-                    model.runBenchmark(dataSet: selectedDataSet, method: selectedMethod)
+                    model.runBenchmark(dataSet: selectedDataSet)
                 }
                 .buttonStyle(.glass)
                 .disabled(model.benchmarkRunning)
@@ -235,47 +204,6 @@ struct ContentView: View {
                 previousResults: model.previousBenchmarkResults,
                 bestResults: model.bestBenchmarkResults,
                 status: model.benchmarkStatus
-            )
-
-            Divider()
-                .overlay(.white.opacity(0.15))
-
-            HStack {
-                Button("Run Core Benchmark") {
-                    model.runCoreBenchmark(dataSet: selectedDataSet)
-                }
-                .buttonStyle(.glass)
-                .disabled(model.benchmarkRunning)
-
-                if model.benchmarkRunning {
-                    ProgressView()
-                        .controlSize(.small)
-                }
-            }
-
-            CoreBenchmarkResultsView(
-                results: model.latestCoreBenchmark
-            )
-
-            Divider()
-                .overlay(.white.opacity(0.15))
-
-            HStack {
-                Button("Run Exception Report") {
-                    model.runExceptionReport(dataSet: selectedDataSet)
-                }
-                .buttonStyle(.glass)
-                .disabled(model.exceptionReportRunning)
-
-                if model.exceptionReportRunning {
-                    ProgressView()
-                        .controlSize(.small)
-                }
-            }
-
-            ExceptionReportView(
-                report: model.exceptionReport,
-                status: model.exceptionReportStatus
             )
 
             Divider()

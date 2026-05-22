@@ -7,23 +7,19 @@ import SwiftUI
 import CallParser
 
 struct BenchmarkResultsView: View {
-    let latestResults: [BenchmarkResultKey: BenchmarkResult]
-    let previousResults: [BenchmarkResultKey: BenchmarkResult]
-    let bestResults: [BenchmarkResultKey: BenchmarkResult]
+    let latestResults: [BenchmarkDataSet: BenchmarkResult]
+    let previousResults: [BenchmarkDataSet: BenchmarkResult]
+    let bestResults: [BenchmarkDataSet: BenchmarkResult]
     let status: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             ForEach(BenchmarkDataSet.allCases, id: \.self) { dataSet in
-                ForEach(BenchmarkMethod.allCases, id: \.self) { method in
-                    let key = BenchmarkResultKey(dataSet: dataSet, method: method)
-                    BenchmarkResultRow(
-                        dataSet: dataSet,
-                        method: method,
-                        latestResult: latestResults[key],
-                        previousResult: previousResults[key] ?? bestResults[key]
-                    )
-                }
+                BenchmarkResultRow(
+                    dataSet: dataSet,
+                    latestResult: latestResults[dataSet],
+                    previousResult: previousResults[dataSet] ?? bestResults[dataSet]
+                )
             }
 
             if let status {
@@ -37,13 +33,12 @@ struct BenchmarkResultsView: View {
 
 private struct BenchmarkResultRow: View {
     let dataSet: BenchmarkDataSet
-    let method: BenchmarkMethod
     let latestResult: BenchmarkResult?
     let previousResult: BenchmarkResult?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("\(dataSet.label) — \(method.label)")
+            Text(dataSet.label)
                 .font(.caption.bold())
                 .foregroundStyle(Color.mediumBlueText)
 

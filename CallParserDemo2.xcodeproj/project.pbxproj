@@ -7,14 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9914FEAD2FBE0888000633BF /* ExceptionReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914FEAC2FBE0888000633BF /* ExceptionReportView.swift */; };
 		9918557A2F88011C0082D797 /* compound.csv in Resources */ = {isa = PBXBuildFile; fileRef = 991855782F87FBF10082D797 /* compound.csv */; };
 		9918557B2F8801350082D797 /* pskreporter.csv in Resources */ = {isa = PBXBuildFile; fileRef = 991855792F87FBF10082D797 /* pskreporter.csv */; };
 		992DCD092FBB5C5900E7DB6C /* BenchmarkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992DCD082FBB5C5900E7DB6C /* BenchmarkResult.swift */; };
 		992DCD0B2FBB5CBC00E7DB6C /* BenchmarkResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992DCD0A2FBB5CBC00E7DB6C /* BenchmarkResultsView.swift */; };
-		992DCD0F2FBBAB6F00E7DB6C /* CoreBenchmarkResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992DCD0E2FBBAB6F00E7DB6C /* CoreBenchmarkResultsView.swift */; };
-		992DCEB92FBBE90800E7DB6C /* LookupComparison.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992DCEB82FBBE90800E7DB6C /* LookupComparison.swift */; };
-		992DCEBB2FBBE93700E7DB6C /* LookupComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992DCEBA2FBBE93700E7DB6C /* LookupComparisonView.swift */; };
 		99414A8829EEF58600951AA3 /* CallParserDemo2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99414A8729EEF58600951AA3 /* CallParserDemo2App.swift */; };
 		99414A8A29EEF58600951AA3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99414A8929EEF58600951AA3 /* ContentView.swift */; };
 		99414A8C29EEF58800951AA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 99414A8B29EEF58800951AA3 /* Assets.xcassets */; };
@@ -24,14 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9914FEAC2FBE0888000633BF /* ExceptionReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExceptionReportView.swift; sourceTree = "<group>"; };
 		991855782F87FBF10082D797 /* compound.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = compound.csv; sourceTree = "<group>"; };
 		991855792F87FBF10082D797 /* pskreporter.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = pskreporter.csv; sourceTree = "<group>"; };
 		992DCD082FBB5C5900E7DB6C /* BenchmarkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchmarkResult.swift; sourceTree = "<group>"; };
 		992DCD0A2FBB5CBC00E7DB6C /* BenchmarkResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchmarkResultsView.swift; sourceTree = "<group>"; };
-		992DCD0E2FBBAB6F00E7DB6C /* CoreBenchmarkResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreBenchmarkResultsView.swift; sourceTree = "<group>"; };
-		992DCEB82FBBE90800E7DB6C /* LookupComparison.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupComparison.swift; sourceTree = "<group>"; };
-		992DCEBA2FBBE93700E7DB6C /* LookupComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupComparisonView.swift; sourceTree = "<group>"; };
 		99414A8429EEF58600951AA3 /* CallParserDemo2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CallParserDemo2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99414A8729EEF58600951AA3 /* CallParserDemo2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallParserDemo2App.swift; sourceTree = "<group>"; };
 		99414A8929EEF58600951AA3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -107,9 +99,6 @@
 			children = (
 				99414A8929EEF58600951AA3 /* ContentView.swift */,
 				992DCD0A2FBB5CBC00E7DB6C /* BenchmarkResultsView.swift */,
-				992DCD0E2FBBAB6F00E7DB6C /* CoreBenchmarkResultsView.swift */,
-				992DCEBA2FBBE93700E7DB6C /* LookupComparisonView.swift */,
-				9914FEAC2FBE0888000633BF /* ExceptionReportView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -119,7 +108,6 @@
 			children = (
 				99414A9829EEF64D00951AA3 /* Model.swift */,
 				992DCD082FBB5C5900E7DB6C /* BenchmarkResult.swift */,
-				992DCEB82FBBE90800E7DB6C /* LookupComparison.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -202,14 +190,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				992DCD0F2FBBAB6F00E7DB6C /* CoreBenchmarkResultsView.swift in Sources */,
-				992DCEB92FBBE90800E7DB6C /* LookupComparison.swift in Sources */,
 				99414A9929EEF64D00951AA3 /* Model.swift in Sources */,
 				99414A8A29EEF58600951AA3 /* ContentView.swift in Sources */,
 				992DCD092FBB5C5900E7DB6C /* BenchmarkResult.swift in Sources */,
-				992DCEBB2FBBE93700E7DB6C /* LookupComparisonView.swift in Sources */,
 				992DCD0B2FBB5CBC00E7DB6C /* BenchmarkResultsView.swift in Sources */,
-				9914FEAD2FBE0888000633BF /* ExceptionReportView.swift in Sources */,
 				99414A8829EEF58600951AA3 /* CallParserDemo2App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

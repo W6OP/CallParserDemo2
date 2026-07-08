@@ -204,6 +204,7 @@ enum QRZLogonStatus: Equatable, Sendable {
     case .sessionTimeout:        return "Session timed out"
     case .notFound:              return "QRZ user not found"
     case .sessionKeyAvailable:   return "Already logged on"
+    case .qrzResponse(let message): return message
     case .unknown:               return "Logon failed (unknown error)"
     }
   }

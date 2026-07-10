@@ -206,6 +206,7 @@ enum QRZLogonStatus: Equatable, Sendable {
     case .sessionKeyAvailable:   return "Already logged on"
     case .qrzResponse(let message): return message
     case .unknown:               return "Logon failed (unknown error)"
+    case .networkUnavailable:    return "Network is not available"
     }
   }
 

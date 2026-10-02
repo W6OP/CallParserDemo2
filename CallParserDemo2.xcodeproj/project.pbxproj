@@ -428,8 +428,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/W6OP/CallParserForMac.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
